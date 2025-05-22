@@ -9,7 +9,9 @@ public interface CodeService {
     CodeResultDto updateCode(Code code);
     CodeResultDto deleteCode(CodeKey codeKey);
 
-    CodeResultDto getCodes(String groupCode, int pageNumber, int pageSize);
+    CodeResultDto getCodesByGroupCode(String groupCode, int pageNumber, int pageSize);
+    CodeResultDto getCodes(int pageNumber, int pageSize);
     CodeResultDto detailCode(CodeKey codeKey);
     CodeResultDto countCode();
+    CodeResultDto updateCodeStatus(CodeKey codeKey, int isActive);
 }

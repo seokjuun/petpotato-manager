@@ -19,7 +19,13 @@ public class CodeController {
             @RequestParam("pageNumber") int pageNumber,
             @RequestParam("pageSize") int pageSize
     ) {
-        return codeService.getCodes(groupCode,pageNumber, pageSize);
+        CodeResultDto codeResultDto = new CodeResultDto();
+        if(groupCode == null || groupCode.isEmpty()) {
+            codeResultDto = codeService.getCodes(pageNumber, pageSize);
+        }
+        else codeResultDto = codeService.getCodesByGroupCode(groupCode,pageNumber, pageSize);
+
+        return codeResultDto;
     }
 
     @GetMapping("/{groupCode}/{code}")
@@ -39,7 +45,8 @@ public class CodeController {
             @RequestParam("code") String code,
             @RequestParam("codeName") String codeName,
             @RequestParam("codeNameBrief") String codeNameBrief,
-            @RequestParam("orderNo") int orderNo
+            @RequestParam("orderNo") int orderNo,
+            @RequestParam("isActive") int isActive
     ) {
         CodeKey codeKey = new CodeKey(groupCode, code);
         Code codeEntity = new Code();
@@ -47,6 +54,7 @@ public class CodeController {
         codeEntity.setCodeName(codeName);
         codeEntity.setCodeNameBrief(codeNameBrief);
         codeEntity.setOrderNo(orderNo);
+        codeEntity.setIsActive(isActive);
         return codeService.insertCode(codeEntity);
     }
 
@@ -61,6 +69,17 @@ public class CodeController {
         return codeService.updateCode(codeParam);
     }
 
+    @PutMapping("/active")
+    public CodeResultDto updateActiveCode(
+            @RequestParam("groupCode") String groupCode,
+            @RequestParam("code") String code,
+            Code codeParam
+    ) {
+        CodeKey codeKey = new CodeKey(groupCode,code);
+        codeParam.setCodeKey(codeKey);
+        return codeService.updateCode(codeParam);
+    }
+
     @DeleteMapping("/{groupCode}/{code}")
     public CodeResultDto deleteCode(
             @PathVariable("groupCode") String groupCode,
@@ -68,6 +87,16 @@ public class CodeController {
     ) {
         CodeKey codeKey = new CodeKey(groupCode,code);
         return codeService.deleteCode(codeKey);
+    }
+
+    @PatchMapping("/{groupCode}/{code}/status")
+    public CodeResultDto updateCodeStatus(
+            @PathVariable("groupCode") String groupCode,
+            @PathVariable("code") String code,
+            @RequestParam("isActive") int isActive
+    ) {
+        CodeKey codeKey = new CodeKey(groupCode, code);
+        return codeService.updateCodeStatus(codeKey, isActive);
     }
 
     @GetMapping("/count")
