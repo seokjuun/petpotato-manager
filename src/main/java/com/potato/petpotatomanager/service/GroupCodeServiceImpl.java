@@ -2,6 +2,7 @@ package com.potato.petpotatomanager.service;
 
 import com.potato.petpotatomanager.dto.CodeResultDto;
 import com.potato.petpotatomanager.dto.GroupCodeDto;
+import com.potato.petpotatomanager.dto.GroupCodeFilterResultDto;
 import com.potato.petpotatomanager.entity.GroupCode;
 import com.potato.petpotatomanager.repository.GroupCodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -137,5 +138,18 @@ public class GroupCodeServiceImpl implements GroupCodeService {
             codeResultDto.setResult("fail");
         }
         return codeResultDto;
+    }
+
+    @Override
+    public GroupCodeFilterResultDto getGroupCodesFilter() {
+        GroupCodeFilterResultDto groupCodeFilterResultDto = new GroupCodeFilterResultDto();
+        try {
+            groupCodeFilterResultDto.setGroupCodeFilterList(groupCodeRepository.findAllForFilter());
+            groupCodeFilterResultDto.setResult("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            groupCodeFilterResultDto.setResult("fail");
+        }
+        return groupCodeFilterResultDto;
     }
 }

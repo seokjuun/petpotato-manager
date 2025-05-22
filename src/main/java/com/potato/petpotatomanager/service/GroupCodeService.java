@@ -1,6 +1,8 @@
 package com.potato.petpotatomanager.service;
 
 import com.potato.petpotatomanager.dto.CodeResultDto;
+import com.potato.petpotatomanager.dto.GroupCodeFilterDto;
+import com.potato.petpotatomanager.dto.GroupCodeFilterResultDto;
 import com.potato.petpotatomanager.entity.GroupCode;
 
 public interface GroupCodeService {
@@ -13,5 +15,6 @@ public interface GroupCodeService {
     CodeResultDto countGroupCode();
 
     CodeResultDto toggleGroupCodeStatus(String groupCode);
+    GroupCodeFilterResultDto getGroupCodesFilter();
 
 }

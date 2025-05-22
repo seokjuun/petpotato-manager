@@ -14,6 +14,7 @@ public class CodeDto {
     private String codeName;
     private String codeNameBrief;
     private int orderNo;
+    private int isActive;
 
     public static CodeDto fromCode(Code code){
         return CodeDto.builder()
@@ -22,6 +23,7 @@ public class CodeDto {
                 .codeName(code.getCodeName())
                 .codeNameBrief(code.getCodeNameBrief())
                 .orderNo(code.getOrderNo())
+                .isActive(code.getIsActive())
                 .build();
     }
 }

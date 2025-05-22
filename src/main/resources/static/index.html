@@ -7,9 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/home.css">
-    <style>
-
-    </style>
 </head>
 <body>
 <!-- Header -->
@@ -203,13 +200,13 @@
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-group">
-                <label for="codeNameBrief">간단명 <span style="color: red;">*</span></label>
+                <label for="codeNameBrief">코드설명 <span style="color: red;">*</span></label>
                 <input type="text" id="codeNameBrief" name="codeNameBrief" class="form-control" maxlength="50" required>
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <label for="orderNo">순서 <span style="color: red;">*</span></label>
-                <input type="number" id="orderNo" name="orderNo" class="form-control" min="1" required>
+                <input type="number" id="orderNo" name="orderNo" class="form-control" min="1" value="1" required>
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-group">
@@ -219,7 +216,7 @@
             </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-outline" onclick="hideCodeModal()">취소</button>
-                <button type="submit" class="btn btn-primary">저장</button>
+                <button type="button" class="btn btn-primary" onclick="saveCodeAsync()">저장</button>
             </div>
         </form>
     </div>
@@ -235,6 +232,7 @@
 <script>
     // 전역 변수
     let currentGroupCodes = [];
+    let currentGroupCodesFilter = [];
     let currentCodes = [];
 
     // 페이지 로드 시 초기화
@@ -254,11 +252,11 @@
 
         // 폼 이벤트 리스너
         document.getElementById('groupCodeForm').addEventListener('submit', handleGroupCodeSubmit);
-        document.getElementById('codeForm').addEventListener('submit', handleCodeSubmit);
 
         // 초기 데이터 로드
         loadGroupCodes();
         loadCodes();
+        loadGroupCodesFilter();
     });
 
     // 섹션 표시 함수
@@ -286,7 +284,6 @@
                         isActive: dto.isActive === 1
                     }));
                     renderGroupCodeTable();
-                    updateGroupCodeFilter();
                 } else {
                     alert('그룹코드를 불러오지 못했습니다.');
                 }
@@ -294,53 +291,76 @@
             .catch(error => console.error('그룹코드 로딩 실패:', error));
     }
 
-    // 코드 데이터 로드
-    function loadCodes() {
-        // 실제 환경에서는 API 호출로 대체
-        currentCodes = [
-            {
-                groupCode: 'GEN',
-                code: '001',
-                codeName: '활성상태',
-                codeNameBrief: '활성',
-                orderNo: 1,
-                isActive: true
-            },
-            {
-                groupCode: 'GEN',
-                code: '002',
-                codeName: '비활성상태',
-                codeNameBrief: '비활성',
-                orderNo: 2,
-                isActive: true
-            },
-            {
-                groupCode: 'USR',
-                code: '001',
-                codeName: '일반사용자',
-                codeNameBrief: '일반',
-                orderNo: 1,
-                isActive: true
-            },
-            {
-                groupCode: 'USR',
-                code: '002',
-                codeName: '관리자',
-                codeNameBrief: '관리자',
-                orderNo: 2,
-                isActive: true
-            },
-            {
-                groupCode: 'PET',
-                code: '001',
-                codeName: '강아지',
-                codeNameBrief: '개',
-                orderNo: 1,
-                isActive: true
-            }
-        ];
+    async function loadGroupCodesFilter() {
+        try {
+            const response = await fetch(`/group-codes/filter`);
 
-        renderCodeTable();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.result === 'success' && data.groupCodeFilterList) {
+                currentGroupCodesFilter = data.groupCodeFilterList.map(groupCode => ({
+                    groupCode: groupCode.groupCode,
+                    groupCodeName: groupCode.groupCodeName,
+                }));
+
+                updateGroupCodeFilter();
+            } else {
+                console.error('코드 데이터 로드 실패:', data);
+                alert('코드 데이터를 불러오는데 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('코드 데이터 로드 중 오류:', error);
+            alert('코드 데이터를 불러오는데 실패했습니다.');
+
+            // 오류 발생 시 빈 배열로 초기화
+            currentCodes = [];
+            renderCodeTable();
+        }
+    }
+
+    async function loadCodes(groupCode = '', pageNumber = 0, pageSize = 20) {
+        try {
+            const params = new URLSearchParams({
+                groupCode: groupCode,
+                pageNumber: pageNumber.toString(),
+                pageSize: pageSize.toString()
+            });
+
+            const response = await fetch(`/api/codes/?${params}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.result === 'success' && data.codeDtoList) {
+                currentCodes = data.codeDtoList.map(code => ({
+                    groupCode: code.groupCode,
+                    code: code.code,
+                    codeName: code.codeName,
+                    codeNameBrief: code.codeNameBrief || '',
+                    orderNo: code.orderNo,
+                    isActive: code.isActive !== 0 // 기본값을 true로 설정
+                }));
+
+                renderCodeTable();
+            } else {
+                console.error('코드 데이터 로드 실패:', data);
+                alert('코드 데이터를 불러오는데 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('코드 데이터 로드 중 오류:', error);
+            alert('코드 데이터를 불러오는데 실패했습니다.');
+
+            // 오류 발생 시 빈 배열로 초기화
+            currentCodes = [];
+            renderCodeTable();
+        }
     }
 
     // 그룹코드 테이블 렌더링
@@ -418,8 +438,18 @@
                 <button class="btn btn-sm btn-outline" onclick="editCode('${code.groupCode}', '${code.code}')">
                     <i class="fas fa-edit"></i> 수정
                 </button>
+                ${code.isActive
+                    ? `<button class="btn btn-sm btn-info"
+                               onclick="activeCode('${code.groupCode}', '${code.code}', 0)">
+                           <i class="fas fa-trash"></i> 비활성
+                       </button>`
+                    : `<button class="btn btn-sm btn-success"
+                               onclick="activeCode('${code.groupCode}', '${code.code}', 1)">
+                           <i class="fa-solid fa-square-check"></i> 활성
+                       </button>`
+                }
                 <button class="btn btn-sm btn-danger" onclick="deleteCode('${code.groupCode}', '${code.code}')">
-                    <i class="fas fa-trash"></i> 삭제
+                    <i class="fas fa-edit"></i> 삭제
                 </button>
             </td>
         `;
@@ -441,8 +471,7 @@
         }
 
         // 활성 그룹코드만 추가
-        currentGroupCodes
-            .filter(gc => gc.isActive)
+        currentGroupCodesFilter
             .forEach(groupCode => {
                 const option1 = new Option(groupCode.groupCodeName, groupCode.groupCode);
                 const option2 = new Option(groupCode.groupCodeName, groupCode.groupCode);
@@ -455,12 +484,8 @@
     function filterCodes() {
         const selectedGroupCode = document.getElementById('groupCodeFilter').value;
 
-        if (selectedGroupCode) {
-            const filteredCodes = currentCodes.filter(code => code.groupCode === selectedGroupCode);
-            renderCodeTable(filteredCodes);
-        } else {
-            renderCodeTable();
-        }
+        // API를 통해 필터링된 데이터 로드
+        loadCodes(selectedGroupCode,0,10);
     }
 
     // 그룹코드 모달 표시
@@ -532,10 +557,6 @@
             // 추가 모드
             title.textContent = '코드 추가';
             document.getElementById('codeIsActive').checked = true;
-
-            // 다음 순서 번호 자동 설정
-            const maxOrder = Math.max(...currentCodes.map(c => c.orderNo), 0);
-            document.getElementById('orderNo').value = maxOrder + 1;
         }
     }
 
@@ -582,59 +603,6 @@
             });
     }
 
-    // 코드 폼 제출 처리
-    function handleCodeSubmit(e) {
-        e.preventDefault();
-
-        const formData = new FormData(e.target);
-        const data = {
-            originalGroupCode: formData.get('originalGroupCode'),
-            originalCode: formData.get('originalCode'),
-            groupCode: formData.get('groupCode'),
-            code: formData.get('code').trim().toUpperCase(),
-            codeName: formData.get('codeName').trim(),
-            codeNameBrief: formData.get('codeNameBrief').trim(),
-            orderNo: parseInt(formData.get('orderNo')),
-            isActive: formData.has('isActive')
-        };
-
-        // 유효성 검사
-        if (!validateCodeData(data)) {
-            return;
-        }
-
-        if (data.originalGroupCode && data.originalCode) {
-            // 수정
-            const index = currentCodes.findIndex(c =>
-                c.groupCode === data.originalGroupCode && c.code === data.originalCode
-            );
-            if (index !== -1) {
-                currentCodes[index] = {
-                    groupCode: data.groupCode,
-                    code: data.code,
-                    codeName: data.codeName,
-                    codeNameBrief: data.codeNameBrief,
-                    orderNo: data.orderNo,
-                    isActive: data.isActive
-                };
-            }
-        } else {
-            // 추가
-            currentCodes.push({
-                groupCode: data.groupCode,
-                code: data.code,
-                codeName: data.codeName,
-                codeNameBrief: data.codeNameBrief,
-                orderNo: data.orderNo,
-                isActive: data.isActive
-            });
-        }
-
-        // 테이블 업데이트
-        renderCodeTable();
-        hideCodeModal();
-    }
-
     // 그룹코드 유효성 검사
     function validateGroupCodeData(data) {
         let isValid = true;
@@ -663,6 +631,65 @@
 
         return isValid;
     }
+
+    async function saveCodeAsync() {
+        const form = document.getElementById('codeForm');
+        const formData = new FormData(form);
+
+        // FormData에서 데이터 추출하여 유효성 검사용 객체 생성
+        const codeData = {
+            originalGroupCode: formData.get('originalGroupCode'),
+            originalCode: formData.get('originalCode'),
+            groupCode: formData.get('groupCode'),
+            code: formData.get('code').trim().toUpperCase(),
+            codeName: formData.get('codeName').trim(),
+            codeNameBrief: formData.get('codeNameBrief').trim(),
+            orderNo: parseInt(formData.get('orderNo')),
+            isActive: formData.has('isActive')
+        };
+
+        // 유효성 검사
+        if (!validateCodeData(codeData)) {
+            return;
+        }
+
+        // 수정인지 추가인지 판단 (기존 값이 있으면 수정)
+        const isEdit = formData.get('originalGroupCode') && formData.get('originalCode');
+
+        // 서버에 전송할 FormData 준비
+        const submitData = new FormData();
+        submitData.append('groupCode', codeData.groupCode);
+        submitData.append('code', codeData.code);
+        submitData.append('codeName', codeData.codeName);
+        submitData.append('codeNameBrief', codeData.codeNameBrief);
+        submitData.append('orderNo', codeData.orderNo);
+        submitData.append('isActive', codeData.isActive ? 1 : 0); // boolean을 int로 변환
+
+        const url = '/api/codes/';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                body: submitData // FormData를 직접 전송 (Content-Type 헤더는 자동 설정됨)
+            });
+
+            if (!response.ok) {
+                throw new Error('서버 오류 발생');
+            }
+
+            const result = await response.json();
+            alert('저장 완료!');
+
+            // 테이블 업데이트
+            await loadCodes();
+            hideCodeModal();
+        } catch (error) {
+            console.error(error);
+            alert('저장 중 오류가 발생했습니다.');
+        }
+    }
+
 
     // 코드 유효성 검사
     function validateCodeData(data) {
@@ -758,16 +785,64 @@
         showCodeModal(groupCode, code);
     }
 
+    // 코드 활성화
+    async function activeCode(groupCode, code, newStatus) {
+        const statusText = newStatus === 1 ? '활성화' : '비활성화';
+
+        // 확인 대화상자
+        if (!confirm(`코드를 ${statusText} 하시겠습니까?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/codes/${groupCode}/${code}/status?isActive=${newStatus}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            alert(`코드가 ${statusText}되었습니다.`);
+            await loadCodes();
+
+        } catch (error) {
+            console.error('상태 변경 실패:', error);
+            alert('상태 변경 중 오류가 발생했습니다: ' + error.message);
+        }
+    }
+
     // 코드 삭제
     function deleteCode(groupCode, code) {
         if (confirm('정말로 이 코드를 삭제하시겠습니까?')) {
-            currentCodes = currentCodes.filter(c =>
-                !(c.groupCode === groupCode && c.code === code)
-            );
-            renderCodeTable();
-            showNotification('코드가 삭제되었습니다.');
+            fetch(`/api/codes/${groupCode}/${code}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('삭제 요청 실패');
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    // 삭제 성공 시 클라이언트 상태도 업데이트
+                    currentCodes = currentCodes.filter(c =>
+                        !(c.groupCode === groupCode && c.code === code)
+                    );
+                    renderCodeTable();
+                    alert('코드가 삭제되었습니다.');
+                })
+                .catch(error => {
+                    console.error('삭제 중 오류 발생:', error);
+                    alert('코드 삭제 중 오류가 발생했습니다.');
+                });
         }
     }
+
 
     // 모달 외부 클릭 시 닫기
     window.onclick = function(event) {

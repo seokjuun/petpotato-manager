@@ -2,6 +2,7 @@ package com.potato.petpotatomanager.controller;
 
 
 import com.potato.petpotatomanager.dto.CodeResultDto;
+import com.potato.petpotatomanager.dto.GroupCodeFilterResultDto;
 import com.potato.petpotatomanager.entity.GroupCode;
 import com.potato.petpotatomanager.service.GroupCodeService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,11 @@ public class GroupCodeController {
     public CodeResultDto listGroupCode(@RequestParam(value = "pageNumber", defaultValue = "0") int page,
                                        @RequestParam(value = "pageSize", defaultValue = "10") int size) {
         return groupCodeService.listGroupCode(page, size);
+    }
+
+    @GetMapping("/filter")
+    public GroupCodeFilterResultDto listGroupCodeFilter() {
+        return groupCodeService.getGroupCodesFilter();
     }
 
     @GetMapping("/{groupCode}")

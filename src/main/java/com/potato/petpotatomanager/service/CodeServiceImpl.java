@@ -60,11 +60,34 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public CodeResultDto getCodes(String groupCode, int pageNumber, int pageSize) {
+    public CodeResultDto getCodesByGroupCode(String groupCode, int pageNumber, int pageSize) {
         CodeResultDto codeResultDto = new CodeResultDto();
         try {
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
             Page<Code> page = codeRepository.findByGroupCode(groupCode,pageable);
+            List<CodeDto> CodeDtoList = new ArrayList<>();
+
+            // PageGroupCode -> List<GroupCode>
+            page.toList().forEach(code -> CodeDtoList.add(CodeDto.fromCode(code)));
+            codeResultDto.setCodeDtoList(CodeDtoList);
+
+            // count
+            Long count = codeRepository.count();
+            codeResultDto.setCount(count);
+            codeResultDto.setResult("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            codeResultDto.setResult("fail");
+        }
+        return codeResultDto;
+    }
+
+    @Override
+    public CodeResultDto getCodes(int pageNumber, int pageSize) {
+        CodeResultDto codeResultDto = new CodeResultDto();
+        try {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Code> page = codeRepository.findAll(pageable);
             List<CodeDto> CodeDtoList = new ArrayList<>();
 
             // PageGroupCode -> List<GroupCode>
@@ -95,6 +118,28 @@ public class CodeServiceImpl implements CodeService {
                     },
                     () -> codeResultDto.setResult("fail")
             );
+        } catch (Exception e) {
+            e.printStackTrace();
+            codeResultDto.setResult("fail");
+        }
+        return codeResultDto;
+    }
+
+    public CodeResultDto updateCodeStatus(CodeKey codeKey, int isActive) {
+        CodeResultDto codeResultDto = new CodeResultDto();
+        try {
+            // 코드 존재 여부 확인
+            Optional<Code> optionalCode = codeRepository.findById(codeKey);
+
+            optionalCode.ifPresentOrElse(
+                    code -> {
+                        code.setIsActive(isActive);
+                        codeRepository.save(code);
+                        codeResultDto.setResult("success");
+                    },
+                    () -> codeResultDto.setResult("fail")
+            );
+
         } catch (Exception e) {
             e.printStackTrace();
             codeResultDto.setResult("fail");
