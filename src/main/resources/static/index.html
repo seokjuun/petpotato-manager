@@ -1,13 +1,915 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>펫 포테이토 관리자 - 공통코드 관리</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #ff6b6b;
+            --primary-dark: #e55454;
+            --secondary: #ffeaa7;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --info: #74b9ff;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --white: #ffffff;
+            --border: #ddd;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f7f8fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-contact span {
+            margin-right: 20px;
+        }
+
+        .header-social a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .header-social a:hover {
+            opacity: 0.8;
+        }
+
+        .header-main {
+            padding: 15px 0;
+        }
+
+        .header-main .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Jua', sans-serif;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #00a085;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #f39c12;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-header {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-family: 'Jua', sans-serif;
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .page-description {
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .admin-sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-title {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .admin-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light);
+        }
+
+        th {
+            background-color: var(--light);
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Forms */
+        .form-container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--danger);
+        }
+
+        .invalid-feedback {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-panel {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .admin-sidebar {
+                position: static;
+            }
+
+            .header-main .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                gap: 20px;
+            }
+
+            .form-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section.active {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
+<!-- Header -->
+<header>
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <span><i class="fas fa-phone"></i> +82 10-1717-6288</span>
+                <span><i class="fas fa-envelope"></i> admin@petpotato.com</span>
+            </div>
+            <div class="header-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="header-main">
+        <div class="container">
+            <a href="#" class="logo">Pet Potato Admin</a>
+            <ul class="nav-menu">
+                <li><a href="#" class="active">공통코드 관리</a></li>
+                <li><a href="#">사용자 관리</a></li>
+                <li><a href="#">게시글 관리</a></li>
+                <li><a href="#">통계</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <span style="margin-right: 15px;">관리자님</span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </div>
+</header>
 
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">공통코드 관리</h1>
+            <p class="page-description">시스템에서 사용되는 공통코드를 관리합니다.</p>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel">
+            <!-- Sidebar -->
+            <div class="admin-sidebar">
+                <div class="sidebar-title">
+                    <i class="fas fa-cogs"></i> 관리 메뉴
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="menu-item active" data-section="group-codes">
+                        <i class="fas fa-layer-group"></i> 그룹코드 관리
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-section="codes">
+                        <i class="fas fa-code"></i> 코드 관리
+                    </a></li>
+                </ul>
+            </div>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+                <!-- Group Codes Section -->
+                <div id="group-codes" class="content-section active">
+                    <div class="section-header">
+                        <h2 class="section-title">그룹코드 관리</h2>
+                        <button class="btn btn-primary" onclick="showGroupCodeModal()">
+                            <i class="fas fa-plus"></i> 그룹코드 추가
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="groupCodeTable">
+                            <thead>
+                            <tr>
+                                <th>그룹코드</th>
+                                <th>그룹코드명</th>
+                                <th>설명</th>
+                                <th>활성화</th>
+                                <th>액션</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 데이터는 JavaScript로 동적 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Codes Section -->
+                <div id="codes" class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">코드 관리</h2>
+                        <button class="btn btn-primary" onclick="showCodeModal()">
+                            <i class="fas fa-plus"></i> 코드 추가
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>그룹코드 필터</label>
+                        <select id="groupCodeFilter" class="form-control" onchange="filterCodes()">
+                            <option value="">전체</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="codeTable">
+                            <thead>
+                            <tr>
+                                <th>그룹코드</th>
+                                <th>코드</th>
+                                <th>코드명</th>
+                                <th>간단명</th>
+                                <th>순서</th>
+                                <th>활성화</th>
+                                <th>액션</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 데이터는 JavaScript로 동적 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Group Code Modal -->
+<div id="groupCodeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="groupCodeModalTitle">그룹코드 추가</h3>
+            <button type="button" class="close" onclick="hideGroupCodeModal()">&times;</button>
+        </div>
+        <form id="groupCodeForm">
+            <input type="hidden" id="groupCodeId" name="groupCodeId">
+            <div class="form-group">
+                <label for="groupCode">그룹코드 <span style="color: red;">*</span></label>
+                <input type="text" id="groupCode" name="groupCode" class="form-control" maxlength="3" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="groupCodeName">그룹코드명 <span style="color: red;">*</span></label>
+                <input type="text" id="groupCodeName" name="groupCodeName" class="form-control" maxlength="50" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="groupCodeDesc">설명</label>
+                <textarea id="groupCodeDesc" name="groupCodeDesc" class="form-control" maxlength="500" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="groupCodeIsActive" name="isActive" checked> 활성화
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="hideGroupCodeModal()">취소</button>
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Code Modal -->
+<div id="codeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="codeModalTitle">코드 추가</h3>
+            <button type="button" class="close" onclick="hideCodeModal()">&times;</button>
+        </div>
+        <form id="codeForm">
+            <input type="hidden" id="originalGroupCode" name="originalGroupCode">
+            <input type="hidden" id="originalCode" name="originalCode">
+            <div class="form-group">
+                <label for="codeGroupCode">그룹코드 <span style="color: red;">*</span></label>
+                <select id="codeGroupCode" name="groupCode" class="form-control" required>
+                    <option value="">선택하세요</option>
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="code">코드 <span style="color: red;">*</span></label>
+                <input type="text" id="code" name="code" class="form-control" maxlength="3" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="codeName">코드명 <span style="color: red;">*</span></label>
+                <input type="text" id="codeName" name="codeName" class="form-control" maxlength="50" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="codeNameBrief">간단명 <span style="color: red;">*</span></label>
+                <input type="text" id="codeNameBrief" name="codeNameBrief" class="form-control" maxlength="50" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="orderNo">순서 <span style="color: red;">*</span></label>
+                <input type="number" id="orderNo" name="orderNo" class="form-control" min="1" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="codeIsActive" name="isActive" checked> 활성화
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="hideCodeModal()">취소</button>
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 펫 포테이토 관리자. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // 전역 변수
+    let currentGroupCodes = [];
+    let currentCodes = [];
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        // 메뉴 이벤트 리스너
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                showSection(section);
+
+                // 활성 메뉴 표시
+                document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 폼 이벤트 리스너
+        document.getElementById('groupCodeForm').addEventListener('submit', handleGroupCodeSubmit);
+        document.getElementById('codeForm').addEventListener('submit', handleCodeSubmit);
+
+        // 초기 데이터 로드
+        loadGroupCodes();
+        loadCodes();
+    });
+
+    // 섹션 표시/숨김
+    function showSection(sectionId) {
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    // 그룹코드 데이터 로드
+    function loadGroupCodes() {
+        // 실제 구현시에는 API 호출
+        // 여기서는 샘플 데이터 사용
+        currentGroupCodes = [
+            { group_code: '100', group_code_name: '운영역할', group_code_desc: '운영역할을 사용자 관리자로 나눕니다.', is_active: 1 },
+            { group_code: '200', group_code_name: '강아지 종', group_code_desc: '강아지를 종에 따라 나눕니다.', is_active: 1 },
+            { group_code: '201', group_code_name: '고양이 종', group_code_desc: '', is_active: 1 },
+            { group_code: '202', group_code_name: '도마뱀 종', group_code_desc: '', is_active: 1 },
+            { group_code: '203', group_code_name: '드래곤 종', group_code_desc: '', is_active: 1 },
+            { group_code: '300', group_code_name: '게시판 카테고리', group_code_desc: '게시판 카테고리별로 나눕니다.', is_active: 1 }
+        ];
+
+        renderGroupCodesTable();
+        updateGroupCodeFilter();
+    }
+
+    // 코드 데이터 로드
+    function loadCodes() {
+        // 실제 구현시에는 API 호출
+        // 여기서는 샘플 데이터 사용
+        currentCodes = [
+            { group_code: '100', code: '001', code_name: '사용자', code_name_brief: '~', order_no: 1, is_active: 1 },
+            { group_code: '100', code: '002', code_name: '관리자', code_name_brief: '~', order_no: 2, is_active: 1 },
+            { group_code: '200', code: '001', code_name: '진돗개', code_name_brief: '~', order_no: 1, is_active: 1 },
+            { group_code: '200', code: '002', code_name: '골든 리트리버', code_name_brief: '~', order_no: 2, is_active: 1 },
+            { group_code: '200', code: '003', code_name: '퍼그', code_name_brief: '~', order_no: 2, is_active: 1 },
+            { group_code: '300', code: '001', code_name: '자유', code_name_brief: '~', order_no: 1, is_active: 1 },
+            { group_code: '300', code: '002', code_name: '미용', code_name_brief: '~', order_no: 2, is_active: 1 },
+            { group_code: '300', code: '004', code_name: '산책', code_name_brief: '~', order_no: 1, is_active: 1 },
+            { group_code: '300', code: '005', code_name: '의료', code_name_brief: '~', order_no: 1, is_active: 1 }
+        ];
+
+        renderCodesTable();
+    }
+
+    // 그룹코드 테이블 렌더링
+    function renderGroupCodesTable() {
+        const tbody = document.querySelector('#groupCodeTable tbody');
+        tbody.innerHTML = '';
+
+        currentGroupCodes.forEach(group => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td>${group.group_code}</td>
+                    <td>${group.group_code_name}</td>
+                    <td>${group.group_code_desc || '-'}</td>
+                    <td>
+                        <span class="badge ${group.is_active ? 'badge-success' : 'badge-danger'}">
+                            ${group.is_active ? '활성' : '비활성'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editGroupCode('${group.group_code}')">
+                            <i class="fas fa-edit"></i> 수정
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteGroupCode('${group.group_code}')">
+                            <i class="fas fa-trash"></i> 삭제
+                        </button>
+                    </td>
+                `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // 코드 테이블 렌더링
+    function renderCodesTable(filteredCodes = null) {
+        const tbody = document.querySelector('#codeTable tbody');
+        tbody.innerHTML = '';
+
+        const codes = filteredCodes || currentCodes;
+
+        codes.forEach(code => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${code.group_code}</td>
+            <td>${code.code}</td>
+            <td>${code.code_name}</td>
+            <td>${code.code_name_brief}</td>
+            <td>
+                <button class="btn btn-sm btn-primary edit-btn" data-id="${code.id}">
+                    수정
+                </button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="${code.id}">
+                    삭제
+                </button>
+            </td>
+        `;
+            tbody.appendChild(row);
+        });
+
+        // 수정 버튼 이벤트 리스너
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const codeId = this.getAttribute('data-id');
+                editCode(codeId);
+            });
+        });
+
+        // 삭제 버튼 이벤트 리스너
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const codeId = this.getAttribute('data-id');
+                if (confirm('정말 삭제하시겠습니까?')) {
+                    deleteCode(codeId);
+                }
+            });
+        });
+    }
+
+    // 코드 수정 함수
+    function editCode(codeId) {
+        const code = currentCodes.find(c => c.id == codeId);
+        if (code) {
+            // 폼에 기존 데이터 채우기
+            document.getElementById('group_code').value = code.group_code;
+            document.getElementById('code').value = code.code;
+            document.getElementById('code_name').value = code.code_name;
+            document.getElementById('code_name_brief').value = code.code_name_brief;
+
+            // 수정 모드 설정
+            document.getElementById('codeForm').setAttribute('data-edit-id', codeId);
+            document.querySelector('#codeModal .modal-title').textContent = '코드 수정';
+
+            // 모달 열기
+            const modal = new bootstrap.Modal(document.getElementById('codeModal'));
+            modal.show();
+        }
+    }
+
+    // 코드 삭제 함수
+    function deleteCode(codeId) {
+        fetch(`/api/codes/${codeId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (response.ok) {
+                    // 성공적으로 삭제됨
+                    loadCodes(); // 테이블 새로고침
+                    alert('코드가 삭제되었습니다.');
+                } else {
+                    alert('삭제 중 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            });
+    }
+</script>
 </body>
 </html>
