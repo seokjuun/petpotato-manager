@@ -20,7 +20,7 @@ public class GroupCode implements Persistable<String> {
     private String groupCodeDesc;
 
     @Column(name="is_active") // 1 활성화, 0 비활성화
-    private int isActive;
+    private int isActive = 1; // 기본값 1로 설정
 
     @Transient
     private boolean isNew = false;
