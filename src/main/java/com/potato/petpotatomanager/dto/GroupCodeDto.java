@@ -12,6 +12,7 @@ public class GroupCodeDto {
     private String groupCode;
     private String groupCodeName;
     private String groupCodeDesc;
+    private int isActive;
 
     // service layer 등에서 GroupCode -> GroupCodeDto 로 변환할 때, 여러 곳에서 사용될 builder 코드를 이곳에 하나로 만들어서 사용
     public static GroupCodeDto fromGroupCode(GroupCode groupCode){
@@ -19,6 +20,7 @@ public class GroupCodeDto {
                 .groupCode(groupCode.getGroupCode())
                 .groupCodeName(groupCode.getGroupCodeName())
                 .groupCodeDesc(groupCode.getGroupCodeDesc())
+                .isActive(groupCode.getIsActive())
                 .build();
     }
 }
