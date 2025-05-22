@@ -6,504 +6,9 @@
     <title>펫 포테이토 관리자 - 공통코드 관리</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="/assets/css/home.css">
     <style>
-        /* CSS Variables */
-        :root {
-            --primary: #ff6b6b;
-            --primary-dark: #e55454;
-            --secondary: #ffeaa7;
-            --success: #00b894;
-            --warning: #fdcb6e;
-            --danger: #e17055;
-            --info: #74b9ff;
-            --light: #f8f9fa;
-            --dark: #2d3436;
-            --gray: #636e72;
-            --white: #ffffff;
-            --border: #ddd;
-        }
 
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: #f7f8fa;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-top {
-            background-color: var(--primary);
-            color: white;
-            padding: 8px 0;
-            font-size: 14px;
-        }
-
-        .header-top .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-contact span {
-            margin-right: 20px;
-        }
-
-        .header-social a {
-            color: white;
-            margin-left: 15px;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .header-social a:hover {
-            opacity: 0.8;
-        }
-
-        .header-main {
-            padding: 15px 0;
-        }
-
-        .header-main .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Jua', sans-serif;
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-menu a:hover,
-        .nav-menu a.active {
-            color: var(--primary);
-        }
-
-        .nav-menu a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--primary);
-        }
-
-        /* Button Styles */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #00a085;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #d63031;
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: #f39c12;
-            transform: translateY(-2px);
-        }
-
-        .btn-sm {
-            padding: 5px 12px;
-            font-size: 12px;
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 40px 0;
-            min-height: calc(100vh - 200px);
-        }
-
-        .page-header {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .page-title {
-            font-family: 'Jua', sans-serif;
-            font-size: 28px;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .page-description {
-            color: var(--gray);
-            font-size: 16px;
-        }
-
-        /* Admin Panel */
-        .admin-panel {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .admin-sidebar {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 120px;
-        }
-
-        .sidebar-title {
-            font-weight: bold;
-            color: var(--dark);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 8px;
-        }
-
-        .sidebar-menu a {
-            display: block;
-            padding: 10px 15px;
-            color: var(--gray);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .admin-content {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Content Sections */
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--dark);
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin: 20px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--light);
-        }
-
-        th {
-            background-color: var(--light);
-            font-weight: bold;
-            color: var(--dark);
-        }
-
-        tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Forms */
-        .form-container {
-            background-color: var(--light);
-            padding: 25px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid var(--border);
-            border-radius: 5px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .form-control.is-invalid {
-            border-color: var(--danger);
-        }
-
-        .invalid-feedback {
-            color: var(--danger);
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            overflow: hidden;
-            position: relative;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .close:hover {
-            color: var(--dark);
-        }
-
-        /* Status Badges */
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .badge-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .badge-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 50px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-panel {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .admin-sidebar {
-                position: static;
-            }
-
-            .header-main .container {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .nav-menu {
-                gap: 20px;
-            }
-
-            .form-actions {
-                justify-content: center;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .content-section.active {
-            animation: fadeIn 0.5s ease-out;
-        }
     </style>
 </head>
 <body>
@@ -769,33 +274,24 @@
 
     // 그룹코드 데이터 로드
     function loadGroupCodes() {
-        // 실제 환경에서는 API 호출로 대체
-        currentGroupCodes = [
-            {
-                id: 1,
-                groupCode: 'GEN',
-                groupCodeName: '일반코드',
-                description: '일반적으로 사용되는 코드',
-                isActive: true
-            },
-            {
-                id: 2,
-                groupCode: 'USR',
-                groupCodeName: '사용자코드',
-                description: '사용자 관련 코드',
-                isActive: true
-            },
-            {
-                id: 3,
-                groupCode: 'PET',
-                groupCodeName: '펫 관련코드',
-                description: '펫 정보 관련 코드',
-                isActive: false
-            }
-        ];
-
-        renderGroupCodeTable();
-        updateGroupCodeFilter();
+        fetch('/group-codes')
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    currentGroupCodes = data.groupCodeDtoList.map(dto => ({
+                        id: dto.groupCode, // 실제로는 groupCode가 ID 역할
+                        groupCode: dto.groupCode,
+                        groupCodeName: dto.groupCodeName,
+                        description: dto.groupCodeDesc,
+                        isActive: dto.isActive === 1
+                    }));
+                    renderGroupCodeTable();
+                    updateGroupCodeFilter();
+                } else {
+                    alert('그룹코드를 불러오지 못했습니다.');
+                }
+            })
+            .catch(error => console.error('그룹코드 로딩 실패:', error));
     }
 
     // 코드 데이터 로드
@@ -864,16 +360,38 @@
                 </span>
             </td>
             <td>
-                <button class="btn btn-sm btn-outline" onclick="editGroupCode(${groupCode.id})">
+                <button class="btn btn-sm btn-outline" onclick="editGroupCode('${groupCode.id}')">
                     <i class="fas fa-edit"></i> 수정
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteGroupCode(${groupCode.id})">
+                <button class="btn btn-sm btn-danger" onclick="deleteGroupCode('${groupCode.id}')">
                     <i class="fas fa-trash"></i> 삭제
+                </button>
+                <button class="btn btn-sm ${groupCode.isActive ? 'btn-warning' : 'btn-success'}"
+                    onclick="toggleGroupCodeStatus('${groupCode.id}')">
+                    ${groupCode.isActive ? '비활성화' : '활성화'}
                 </button>
             </td>
         `;
             tbody.appendChild(row);
         });
+    }
+
+    function toggleGroupCodeStatus(groupCodeId) {
+        fetch(`/group-codes/${groupCodeId}/toggle`, { method: 'PATCH' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    const updated = data.groupCodeDto;
+                    const index = currentGroupCodes.findIndex(gc => gc.id === updated.groupCode);
+                    if (index !== -1) {
+                        currentGroupCodes[index].isActive = updated.isActive === 1;
+                        renderGroupCodeTable();
+                        updateGroupCodeFilter();
+                    }
+                } else {
+                    alert('활성/비활성 전환 실패');
+                }
+            });
     }
 
     // 코드 테이블 렌더링
@@ -964,6 +482,7 @@
                 title.textContent = '그룹코드 수정';
                 document.getElementById('groupCodeId').value = groupCode.id;
                 document.getElementById('groupCode').value = groupCode.groupCode;
+                document.getElementById('groupCode').readOnly = true;  // 수정 불가
                 document.getElementById('groupCodeName').value = groupCode.groupCodeName;
                 document.getElementById('groupCodeDesc').value = groupCode.description || '';
                 document.getElementById('groupCodeIsActive').checked = groupCode.isActive;
@@ -971,6 +490,9 @@
         } else {
             // 추가 모드
             title.textContent = '그룹코드 추가';
+            document.getElementById('groupCodeId').value = '';
+            document.getElementById('groupCode').value = '';
+            document.getElementById('groupCode').readOnly = false; // 다시 수정 가능
             document.getElementById('groupCodeIsActive').checked = true;
         }
     }
@@ -1027,35 +549,37 @@
         e.preventDefault();
 
         const formData = new FormData(e.target);
-        const data = {
-            id: formData.get('groupCodeId') ? parseInt(formData.get('groupCodeId')) : null,
+        const groupCodeId = formData.get('groupCodeId');
+        const method = groupCodeId ? 'PUT' : 'POST';
+        const url = '/group-codes';
+
+        const payload = new URLSearchParams({
             groupCode: formData.get('groupCode').trim().toUpperCase(),
             groupCodeName: formData.get('groupCodeName').trim(),
-            description: formData.get('groupCodeDesc').trim(),
-            isActive: formData.has('isActive')
-        };
+            groupCodeDesc: formData.get('groupCodeDesc').trim(),
+            isActive: formData.has('isActive') ? '1' : '0'
+        });
 
-        // 유효성 검사
-        if (!validateGroupCodeData(data)) {
-            return;
-        }
-
-        if (data.id) {
-            // 수정
-            const index = currentGroupCodes.findIndex(gc => gc.id === data.id);
-            if (index !== -1) {
-                currentGroupCodes[index] = { ...currentGroupCodes[index], ...data };
-            }
-        } else {
-            // 추가
-            data.id = Math.max(...currentGroupCodes.map(gc => gc.id), 0) + 1;
-            currentGroupCodes.push(data);
-        }
-
-        // 테이블 업데이트
-        renderGroupCodeTable();
-        updateGroupCodeFilter();
-        hideGroupCodeModal();
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: payload
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    loadGroupCodes();
+                    hideGroupCodeModal();
+                } else {
+                    alert('저장에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('저장 오류:', error);
+                alert('저장 중 오류가 발생했습니다.');
+            });
     }
 
     // 코드 폼 제출 처리
@@ -1117,8 +641,8 @@
         const form = document.getElementById('groupCodeForm');
 
         // 그룹코드 중복 검사
-        const isDuplicate = currentGroupCodes.some(gc =>
-            gc.groupCode === data.groupCode && gc.id !== data.id
+        const isDuplicate = !data.id && currentGroupCodes.some(gc =>
+            gc.groupCode === data.groupCode
         );
 
         if (isDuplicate) {
@@ -1214,21 +738,18 @@
     // 그룹코드 삭제
     function deleteGroupCode(groupCodeId) {
         if (confirm('정말로 이 그룹코드를 삭제하시겠습니까?')) {
-            // 해당 그룹코드를 사용하는 코드가 있는지 확인
-            const hasRelatedCodes = currentCodes.some(code => {
-                const groupCode = currentGroupCodes.find(gc => gc.id === groupCodeId);
-                return groupCode && code.groupCode === groupCode.groupCode;
-            });
-
-            if (hasRelatedCodes) {
-                alert('이 그룹코드를 사용하는 코드가 있어 삭제할 수 없습니다.');
-                return;
-            }
-
-            currentGroupCodes = currentGroupCodes.filter(gc => gc.id !== groupCodeId);
-            renderGroupCodeTable();
-            updateGroupCodeFilter();
-            showNotification('그룹코드가 삭제되었습니다.');
+            fetch(`/group-codes/${groupCodeId}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        currentGroupCodes = currentGroupCodes.filter(gc => gc.id !== groupCodeId);
+                        renderGroupCodeTable();
+                        updateGroupCodeFilter();
+                        showNotification('그룹코드가 삭제되었습니다.');
+                    } else {
+                        alert('삭제 실패');
+                    }
+                });
         }
     }
 
