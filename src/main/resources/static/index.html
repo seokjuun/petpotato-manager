@@ -291,7 +291,7 @@
 
         .section-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
@@ -394,6 +394,7 @@
             top: 0;
             width: 100%;
             height: 100%;
+            padding: 20px;
             background-color: rgba(0,0,0,0.5);
         }
 
@@ -409,6 +410,8 @@
             padding: 30px;
             max-width: 500px;
             width: 90%;
+            overflow: hidden;
+            position: relative;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -537,7 +540,7 @@
 </header>
 
 <!-- Main Content -->
-<main class="main-content">
+<div class="main-content">
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
@@ -629,7 +632,7 @@
             </div>
         </div>
     </div>
-</main>
+</div>
 
 <!-- Group Code Modal -->
 <div id="groupCodeModal" class="modal">
@@ -753,163 +756,510 @@
         loadCodes();
     });
 
-    // 섹션 표시/숨김
+    // 섹션 표시 함수
     function showSection(sectionId) {
+        // 모든 섹션 숨기기
         document.querySelectorAll('.content-section').forEach(section => {
             section.classList.remove('active');
         });
+
+        // 선택된 섹션 표시
         document.getElementById(sectionId).classList.add('active');
     }
 
     // 그룹코드 데이터 로드
     function loadGroupCodes() {
-        // 실제 구현시에는 API 호출
-        // 여기서는 샘플 데이터 사용
+        // 실제 환경에서는 API 호출로 대체
         currentGroupCodes = [
-            { group_code: '100', group_code_name: '운영역할', group_code_desc: '운영역할을 사용자 관리자로 나눕니다.', is_active: 1 },
-            { group_code: '200', group_code_name: '강아지 종', group_code_desc: '강아지를 종에 따라 나눕니다.', is_active: 1 },
-            { group_code: '201', group_code_name: '고양이 종', group_code_desc: '', is_active: 1 },
-            { group_code: '202', group_code_name: '도마뱀 종', group_code_desc: '', is_active: 1 },
-            { group_code: '203', group_code_name: '드래곤 종', group_code_desc: '', is_active: 1 },
-            { group_code: '300', group_code_name: '게시판 카테고리', group_code_desc: '게시판 카테고리별로 나눕니다.', is_active: 1 }
+            {
+                id: 1,
+                groupCode: 'GEN',
+                groupCodeName: '일반코드',
+                description: '일반적으로 사용되는 코드',
+                isActive: true
+            },
+            {
+                id: 2,
+                groupCode: 'USR',
+                groupCodeName: '사용자코드',
+                description: '사용자 관련 코드',
+                isActive: true
+            },
+            {
+                id: 3,
+                groupCode: 'PET',
+                groupCodeName: '펫 관련코드',
+                description: '펫 정보 관련 코드',
+                isActive: false
+            }
         ];
 
-        renderGroupCodesTable();
+        renderGroupCodeTable();
         updateGroupCodeFilter();
     }
 
     // 코드 데이터 로드
     function loadCodes() {
-        // 실제 구현시에는 API 호출
-        // 여기서는 샘플 데이터 사용
+        // 실제 환경에서는 API 호출로 대체
         currentCodes = [
-            { group_code: '100', code: '001', code_name: '사용자', code_name_brief: '~', order_no: 1, is_active: 1 },
-            { group_code: '100', code: '002', code_name: '관리자', code_name_brief: '~', order_no: 2, is_active: 1 },
-            { group_code: '200', code: '001', code_name: '진돗개', code_name_brief: '~', order_no: 1, is_active: 1 },
-            { group_code: '200', code: '002', code_name: '골든 리트리버', code_name_brief: '~', order_no: 2, is_active: 1 },
-            { group_code: '200', code: '003', code_name: '퍼그', code_name_brief: '~', order_no: 2, is_active: 1 },
-            { group_code: '300', code: '001', code_name: '자유', code_name_brief: '~', order_no: 1, is_active: 1 },
-            { group_code: '300', code: '002', code_name: '미용', code_name_brief: '~', order_no: 2, is_active: 1 },
-            { group_code: '300', code: '004', code_name: '산책', code_name_brief: '~', order_no: 1, is_active: 1 },
-            { group_code: '300', code: '005', code_name: '의료', code_name_brief: '~', order_no: 1, is_active: 1 }
+            {
+                groupCode: 'GEN',
+                code: '001',
+                codeName: '활성상태',
+                codeNameBrief: '활성',
+                orderNo: 1,
+                isActive: true
+            },
+            {
+                groupCode: 'GEN',
+                code: '002',
+                codeName: '비활성상태',
+                codeNameBrief: '비활성',
+                orderNo: 2,
+                isActive: true
+            },
+            {
+                groupCode: 'USR',
+                code: '001',
+                codeName: '일반사용자',
+                codeNameBrief: '일반',
+                orderNo: 1,
+                isActive: true
+            },
+            {
+                groupCode: 'USR',
+                code: '002',
+                codeName: '관리자',
+                codeNameBrief: '관리자',
+                orderNo: 2,
+                isActive: true
+            },
+            {
+                groupCode: 'PET',
+                code: '001',
+                codeName: '강아지',
+                codeNameBrief: '개',
+                orderNo: 1,
+                isActive: true
+            }
         ];
 
-        renderCodesTable();
+        renderCodeTable();
     }
 
     // 그룹코드 테이블 렌더링
-    function renderGroupCodesTable() {
+    function renderGroupCodeTable() {
         const tbody = document.querySelector('#groupCodeTable tbody');
         tbody.innerHTML = '';
 
-        currentGroupCodes.forEach(group => {
+        currentGroupCodes.forEach(groupCode => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                    <td>${group.group_code}</td>
-                    <td>${group.group_code_name}</td>
-                    <td>${group.group_code_desc || '-'}</td>
-                    <td>
-                        <span class="badge ${group.is_active ? 'badge-success' : 'badge-danger'}">
-                            ${group.is_active ? '활성' : '비활성'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editGroupCode('${group.group_code}')">
-                            <i class="fas fa-edit"></i> 수정
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteGroupCode('${group.group_code}')">
-                            <i class="fas fa-trash"></i> 삭제
-                        </button>
-                    </td>
-                `;
-            tbody.appendChild(row);
-        });
-    }
-
-    // 코드 테이블 렌더링
-    function renderCodesTable(filteredCodes = null) {
-        const tbody = document.querySelector('#codeTable tbody');
-        tbody.innerHTML = '';
-
-        const codes = filteredCodes || currentCodes;
-
-        codes.forEach(code => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${code.group_code}</td>
-            <td>${code.code}</td>
-            <td>${code.code_name}</td>
-            <td>${code.code_name_brief}</td>
+            <td>${groupCode.groupCode}</td>
+            <td>${groupCode.groupCodeName}</td>
+            <td>${groupCode.description || ''}</td>
             <td>
-                <button class="btn btn-sm btn-primary edit-btn" data-id="${code.id}">
-                    수정
+                <span class="status-badge ${groupCode.isActive ? 'active' : 'inactive'}">
+                    ${groupCode.isActive ? '활성' : '비활성'}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="editGroupCode(${groupCode.id})">
+                    <i class="fas fa-edit"></i> 수정
                 </button>
-                <button class="btn btn-sm btn-danger delete-btn" data-id="${code.id}">
-                    삭제
+                <button class="btn btn-sm btn-danger" onclick="deleteGroupCode(${groupCode.id})">
+                    <i class="fas fa-trash"></i> 삭제
                 </button>
             </td>
         `;
             tbody.appendChild(row);
         });
+    }
 
-        // 수정 버튼 이벤트 리스너
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const codeId = this.getAttribute('data-id');
-                editCode(codeId);
-            });
-        });
+    // 코드 테이블 렌더링
+    function renderCodeTable(filteredCodes = null) {
+        const tbody = document.querySelector('#codeTable tbody');
+        tbody.innerHTML = '';
 
-        // 삭제 버튼 이벤트 리스너
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const codeId = this.getAttribute('data-id');
-                if (confirm('정말 삭제하시겠습니까?')) {
-                    deleteCode(codeId);
-                }
-            });
+        const codesToRender = filteredCodes || currentCodes;
+
+        codesToRender.forEach(code => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${code.groupCode}</td>
+            <td>${code.code}</td>
+            <td>${code.codeName}</td>
+            <td>${code.codeNameBrief}</td>
+            <td>${code.orderNo}</td>
+            <td>
+                <span class="status-badge ${code.isActive ? 'active' : 'inactive'}">
+                    ${code.isActive ? '활성' : '비활성'}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="editCode('${code.groupCode}', '${code.code}')">
+                    <i class="fas fa-edit"></i> 수정
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteCode('${code.groupCode}', '${code.code}')">
+                    <i class="fas fa-trash"></i> 삭제
+                </button>
+            </td>
+        `;
+            tbody.appendChild(row);
         });
     }
 
-    // 코드 수정 함수
-    function editCode(codeId) {
-        const code = currentCodes.find(c => c.id == codeId);
-        if (code) {
-            // 폼에 기존 데이터 채우기
-            document.getElementById('group_code').value = code.group_code;
-            document.getElementById('code').value = code.code;
-            document.getElementById('code_name').value = code.code_name;
-            document.getElementById('code_name_brief').value = code.code_name_brief;
+    // 그룹코드 필터 업데이트
+    function updateGroupCodeFilter() {
+        const select = document.getElementById('groupCodeFilter');
+        const codeGroupSelect = document.getElementById('codeGroupCode');
 
-            // 수정 모드 설정
-            document.getElementById('codeForm').setAttribute('data-edit-id', codeId);
-            document.querySelector('#codeModal .modal-title').textContent = '코드 수정';
+        // 기존 옵션 제거 (첫 번째 옵션 제외)
+        while (select.children.length > 1) {
+            select.removeChild(select.lastChild);
+        }
+        while (codeGroupSelect.children.length > 1) {
+            codeGroupSelect.removeChild(codeGroupSelect.lastChild);
+        }
 
-            // 모달 열기
-            const modal = new bootstrap.Modal(document.getElementById('codeModal'));
-            modal.show();
+        // 활성 그룹코드만 추가
+        currentGroupCodes
+            .filter(gc => gc.isActive)
+            .forEach(groupCode => {
+                const option1 = new Option(groupCode.groupCodeName, groupCode.groupCode);
+                const option2 = new Option(groupCode.groupCodeName, groupCode.groupCode);
+                select.appendChild(option1);
+                codeGroupSelect.appendChild(option2);
+            });
+    }
+
+    // 코드 필터링
+    function filterCodes() {
+        const selectedGroupCode = document.getElementById('groupCodeFilter').value;
+
+        if (selectedGroupCode) {
+            const filteredCodes = currentCodes.filter(code => code.groupCode === selectedGroupCode);
+            renderCodeTable(filteredCodes);
+        } else {
+            renderCodeTable();
         }
     }
 
-    // 코드 삭제 함수
-    function deleteCode(codeId) {
-        fetch(`/api/codes/${codeId}`, {
-            method: 'DELETE'
-        })
-            .then(response => {
-                if (response.ok) {
-                    // 성공적으로 삭제됨
-                    loadCodes(); // 테이블 새로고침
-                    alert('코드가 삭제되었습니다.');
-                } else {
-                    alert('삭제 중 오류가 발생했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('삭제 중 오류가 발생했습니다.');
-            });
+    // 그룹코드 모달 표시
+    function showGroupCodeModal(groupCodeId = null) {
+        const modal = document.getElementById('groupCodeModal');
+        const form = document.getElementById('groupCodeForm');
+        const title = document.getElementById('groupCodeModalTitle');
+
+        modal.classList.add('show');
+
+        // 폼 초기화
+        form.reset();
+        clearValidation(form);
+
+        if (groupCodeId) {
+            // 수정 모드
+            const groupCode = currentGroupCodes.find(gc => gc.id === groupCodeId);
+            if (groupCode) {
+                title.textContent = '그룹코드 수정';
+                document.getElementById('groupCodeId').value = groupCode.id;
+                document.getElementById('groupCode').value = groupCode.groupCode;
+                document.getElementById('groupCodeName').value = groupCode.groupCodeName;
+                document.getElementById('groupCodeDesc').value = groupCode.description || '';
+                document.getElementById('groupCodeIsActive').checked = groupCode.isActive;
+            }
+        } else {
+            // 추가 모드
+            title.textContent = '그룹코드 추가';
+            document.getElementById('groupCodeIsActive').checked = true;
+        }
     }
+
+    // 그룹코드 모달 숨기기
+    function hideGroupCodeModal() {
+        document.getElementById('groupCodeModal').classList.remove('show');
+    }
+
+    // 코드 모달 표시
+    function showCodeModal(groupCode = null, code = null) {
+        const modal = document.getElementById('codeModal');
+        const form = document.getElementById('codeForm');
+        const title = document.getElementById('codeModalTitle');
+
+        modal.classList.add('show');
+
+        // 폼 초기화
+        form.reset();
+        clearValidation(form);
+
+        if (groupCode && code) {
+            // 수정 모드
+            const codeData = currentCodes.find(c => c.groupCode === groupCode && c.code === code);
+            if (codeData) {
+                title.textContent = '코드 수정';
+                document.getElementById('originalGroupCode').value = codeData.groupCode;
+                document.getElementById('originalCode').value = codeData.code;
+                document.getElementById('codeGroupCode').value = codeData.groupCode;
+                document.getElementById('code').value = codeData.code;
+                document.getElementById('codeName').value = codeData.codeName;
+                document.getElementById('codeNameBrief').value = codeData.codeNameBrief;
+                document.getElementById('orderNo').value = codeData.orderNo;
+                document.getElementById('codeIsActive').checked = codeData.isActive;
+            }
+        } else {
+            // 추가 모드
+            title.textContent = '코드 추가';
+            document.getElementById('codeIsActive').checked = true;
+
+            // 다음 순서 번호 자동 설정
+            const maxOrder = Math.max(...currentCodes.map(c => c.orderNo), 0);
+            document.getElementById('orderNo').value = maxOrder + 1;
+        }
+    }
+
+    // 코드 모달 숨기기
+    function hideCodeModal() {
+        document.getElementById('codeModal').classList.remove('show');
+    }
+
+    // 그룹코드 폼 제출 처리
+    function handleGroupCodeSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const data = {
+            id: formData.get('groupCodeId') ? parseInt(formData.get('groupCodeId')) : null,
+            groupCode: formData.get('groupCode').trim().toUpperCase(),
+            groupCodeName: formData.get('groupCodeName').trim(),
+            description: formData.get('groupCodeDesc').trim(),
+            isActive: formData.has('isActive')
+        };
+
+        // 유효성 검사
+        if (!validateGroupCodeData(data)) {
+            return;
+        }
+
+        if (data.id) {
+            // 수정
+            const index = currentGroupCodes.findIndex(gc => gc.id === data.id);
+            if (index !== -1) {
+                currentGroupCodes[index] = { ...currentGroupCodes[index], ...data };
+            }
+        } else {
+            // 추가
+            data.id = Math.max(...currentGroupCodes.map(gc => gc.id), 0) + 1;
+            currentGroupCodes.push(data);
+        }
+
+        // 테이블 업데이트
+        renderGroupCodeTable();
+        updateGroupCodeFilter();
+        hideGroupCodeModal();
+    }
+
+    // 코드 폼 제출 처리
+    function handleCodeSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const data = {
+            originalGroupCode: formData.get('originalGroupCode'),
+            originalCode: formData.get('originalCode'),
+            groupCode: formData.get('groupCode'),
+            code: formData.get('code').trim().toUpperCase(),
+            codeName: formData.get('codeName').trim(),
+            codeNameBrief: formData.get('codeNameBrief').trim(),
+            orderNo: parseInt(formData.get('orderNo')),
+            isActive: formData.has('isActive')
+        };
+
+        // 유효성 검사
+        if (!validateCodeData(data)) {
+            return;
+        }
+
+        if (data.originalGroupCode && data.originalCode) {
+            // 수정
+            const index = currentCodes.findIndex(c =>
+                c.groupCode === data.originalGroupCode && c.code === data.originalCode
+            );
+            if (index !== -1) {
+                currentCodes[index] = {
+                    groupCode: data.groupCode,
+                    code: data.code,
+                    codeName: data.codeName,
+                    codeNameBrief: data.codeNameBrief,
+                    orderNo: data.orderNo,
+                    isActive: data.isActive
+                };
+            }
+        } else {
+            // 추가
+            currentCodes.push({
+                groupCode: data.groupCode,
+                code: data.code,
+                codeName: data.codeName,
+                codeNameBrief: data.codeNameBrief,
+                orderNo: data.orderNo,
+                isActive: data.isActive
+            });
+        }
+
+        // 테이블 업데이트
+        renderCodeTable();
+        hideCodeModal();
+    }
+
+    // 그룹코드 유효성 검사
+    function validateGroupCodeData(data) {
+        let isValid = true;
+        const form = document.getElementById('groupCodeForm');
+
+        // 그룹코드 중복 검사
+        const isDuplicate = currentGroupCodes.some(gc =>
+            gc.groupCode === data.groupCode && gc.id !== data.id
+        );
+
+        if (isDuplicate) {
+            showFieldError(form, 'groupCode', '이미 존재하는 그룹코드입니다.');
+            isValid = false;
+        }
+
+        // 필수 필드 검사
+        if (!data.groupCode) {
+            showFieldError(form, 'groupCode', '그룹코드는 필수입니다.');
+            isValid = false;
+        }
+
+        if (!data.groupCodeName) {
+            showFieldError(form, 'groupCodeName', '그룹코드명은 필수입니다.');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // 코드 유효성 검사
+    function validateCodeData(data) {
+        let isValid = true;
+        const form = document.getElementById('codeForm');
+
+        // 코드 중복 검사
+        const isDuplicate = currentCodes.some(c =>
+            c.groupCode === data.groupCode && c.code === data.code &&
+            !(c.groupCode === data.originalGroupCode && c.code === data.originalCode)
+        );
+
+        if (isDuplicate) {
+            showFieldError(form, 'code', '해당 그룹코드에 이미 존재하는 코드입니다.');
+            isValid = false;
+        }
+
+        // 필수 필드 검사
+        if (!data.groupCode) {
+            showFieldError(form, 'codeGroupCode', '그룹코드를 선택하세요.');
+            isValid = false;
+        }
+
+        if (!data.code) {
+            showFieldError(form, 'code', '코드는 필수입니다.');
+            isValid = false;
+        }
+
+        if (!data.codeName) {
+            showFieldError(form, 'codeName', '코드명은 필수입니다.');
+            isValid = false;
+        }
+
+        if (!data.codeNameBrief) {
+            showFieldError(form, 'codeNameBrief', '간단명은 필수입니다.');
+            isValid = false;
+        }
+
+        if (!data.orderNo || data.orderNo < 1) {
+            showFieldError(form, 'orderNo', '순서는 1 이상이어야 합니다.');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // 필드 에러 표시
+    function showFieldError(form, fieldName, message) {
+        const field = form.querySelector(`[name="${fieldName}"]`);
+        const feedback = field.nextElementSibling;
+
+        field.classList.add('is-invalid');
+        if (feedback && feedback.classList.contains('invalid-feedback')) {
+            feedback.textContent = message;
+        }
+    }
+
+    // 유효성 검사 초기화
+    function clearValidation(form) {
+        form.querySelectorAll('.is-invalid').forEach(field => {
+            field.classList.remove('is-invalid');
+        });
+        form.querySelectorAll('.invalid-feedback').forEach(feedback => {
+            feedback.textContent = '';
+        });
+    }
+
+    // 그룹코드 수정
+    function editGroupCode(groupCodeId) {
+        showGroupCodeModal(groupCodeId);
+    }
+
+    // 그룹코드 삭제
+    function deleteGroupCode(groupCodeId) {
+        if (confirm('정말로 이 그룹코드를 삭제하시겠습니까?')) {
+            // 해당 그룹코드를 사용하는 코드가 있는지 확인
+            const hasRelatedCodes = currentCodes.some(code => {
+                const groupCode = currentGroupCodes.find(gc => gc.id === groupCodeId);
+                return groupCode && code.groupCode === groupCode.groupCode;
+            });
+
+            if (hasRelatedCodes) {
+                alert('이 그룹코드를 사용하는 코드가 있어 삭제할 수 없습니다.');
+                return;
+            }
+
+            currentGroupCodes = currentGroupCodes.filter(gc => gc.id !== groupCodeId);
+            renderGroupCodeTable();
+            updateGroupCodeFilter();
+            showNotification('그룹코드가 삭제되었습니다.');
+        }
+    }
+
+    // 코드 수정
+    function editCode(groupCode, code) {
+        showCodeModal(groupCode, code);
+    }
+
+    // 코드 삭제
+    function deleteCode(groupCode, code) {
+        if (confirm('정말로 이 코드를 삭제하시겠습니까?')) {
+            currentCodes = currentCodes.filter(c =>
+                !(c.groupCode === groupCode && c.code === code)
+            );
+            renderCodeTable();
+            showNotification('코드가 삭제되었습니다.');
+        }
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const groupCodeModal = document.getElementById('groupCodeModal');
+        const codeModal = document.getElementById('codeModal');
+
+        if (event.target === groupCodeModal) {
+            hideGroupCodeModal();
+        } else if (event.target === codeModal) {
+            hideCodeModal();
+        }
+    }
+
 </script>
 </body>
 </html>
