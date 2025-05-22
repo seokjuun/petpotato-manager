@@ -12,4 +12,6 @@ public interface GroupCodeService {
     CodeResultDto detailGroupCode(String groupCode);
     CodeResultDto countGroupCode();
 
+    CodeResultDto toggleGroupCodeStatus(String groupCode);
+
 }

@@ -116,4 +116,26 @@ public class GroupCodeServiceImpl implements GroupCodeService {
         }
         return codeResultDto;
     }
+
+
+    @Override
+    public CodeResultDto toggleGroupCodeStatus(String groupCode) {
+        CodeResultDto codeResultDto = new CodeResultDto();
+        try {
+            Optional<GroupCode> optionalGroupCode = groupCodeRepository.findById(groupCode);
+            if (optionalGroupCode.isPresent()) {
+                GroupCode code = optionalGroupCode.get();
+                code.setIsActive(code.getIsActive() == 1 ? 0 : 1);
+                groupCodeRepository.save(code);
+                codeResultDto.setGroupCodeDto(GroupCodeDto.fromGroupCode(code));
+                codeResultDto.setResult("success");
+            } else {
+                codeResultDto.setResult("fail");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            codeResultDto.setResult("fail");
+        }
+        return codeResultDto;
+    }
 }

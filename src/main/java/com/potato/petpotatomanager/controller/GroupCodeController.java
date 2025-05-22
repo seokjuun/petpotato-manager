@@ -44,4 +44,9 @@ public class GroupCodeController {
     public CodeResultDto countGroupCode() {
         return groupCodeService.countGroupCode();
     }
+
+    @PatchMapping("/{groupCode}/toggle")
+    public CodeResultDto toggleGroupCodeStatus(@PathVariable String groupCode) {
+        return groupCodeService.toggleGroupCodeStatus(groupCode);
+    }
 }
